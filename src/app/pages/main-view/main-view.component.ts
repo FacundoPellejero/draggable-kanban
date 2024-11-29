@@ -31,10 +31,10 @@ export class MainViewComponent {
       "tarea de investigacion"
     ]),
     new Column('HACER', [
-      'Terminar tareas',
-      'Rellenear tareas',
-      'lorem ipsum sit et amet',
-      'lorem'
+      'Agregar funcionalidad para agregar tareas',
+      'Agregar funcionalidad para agregar tableros',
+      'Persistencia?',
+      'Cambio de patron de fondo'
     ]),
     new Column('Hecho', [
       'Kanban',
