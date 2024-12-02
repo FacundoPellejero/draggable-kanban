@@ -1,35 +1,333 @@
 <div class="root">
-    <div class="navbar has-background-dark">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <h1 class="app-name has-gradient-text">Kanban</h1>
-            </div>
+  <div class="navbar has-background-dark">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <h1 class="app-name has-gradient-text">Kanban</h1>
+      </div>
+    </div>
+    <div class="navbar-end is-spaced">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button expand-on-hover" (click)="launchColumnModal()">
+            <i class="fa-solid fa-plus"></i>
+            <span class="button-text">Columna</span>
+            <i class="fa-solid fa-table-columns"></i>
+          </a>
+          <a class="button expand-on-hover" (click)="launchTaskModal()">
+            <i class="fa-solid fa-plus"></i>
+            <span class="button-text">Tarea</span>
+            <i class="fa-solid fa-list"></i>
+          </a>
         </div>
+      </div>
+
+      <div class="navbar-item is-hoverable has-dropdown is-spaced">
+        <div class="buttons">
+          <a class="button setting is-arrowless has-text-centered">
+            <i class="fa-solid fa-sliders"></i>
+          </a>
+          <div class="navbar-dropdown is-right">
+            <div class="navbar-item has-text-centered">
+              <i class="fa-regular fa-image"></i>
+              Fondos disponibles
+            </div>
+            <hr class="navbar-divider" />
+            <a class="navbar-item" (click)="f1()">
+              Fondo default
+              <div class="back is-justify-content-left f1"></div>
+            </a>
+            <a class="navbar-item" (click)="f2()">
+              Liquid Cheese
+              <div class="back is-justify-content-left f2"></div>
+            </a>
+            <a class="navbar-item" (click)="f3()">
+              Wavey Fingerprint
+              <div class="back is-justify-content-left f3"></div>
+            </a>
+            <a class="navbar-item" (click)="f4()">
+              Flat Mountains
+              <div class="back is-justify-content-left f4"></div>
+            </a>
+            <a class="navbar-item" (click)="f5()">
+              Colorful Stingrays
+              <div class="back is-justify-content-left f5"></div>
+            </a>
+            <a class="navbar-item" (click)="f6()">
+              Abstract Timekeeper
+              <div class="back is-justify-content-left f6"></div>
+            </a>
+            <a class="navbar-item" (click)="f7()">
+              Hollowed Boxes
+              <div class="back is-justify-content-left f7"></div>
+            </a>
+            <a class="navbar-item" (click)="f8()">
+              Zig Zag
+              <div class="back is-justify-content-left f8"></div>
+            </a>
+            <a class="navbar-item" (click)="f9()">
+              Polka Dots
+              <div class="back is-justify-content-left f9"></div>
+            </a>
+
+            <hr class="navbar-divider" />
+            <div class="navbar-item has-text-centered">
+              <a
+                href="https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Fondos creados por Matt Visiwig</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    --
+  </div>
+
+  <div class="board">
+    <div class="board-bar">
+      <p class="board-name">{{ board.name }}</p>
     </div>
 
-    <div class="board">
-        <div class="board-bar">
-            <p class="board-name">Lorem name</p>
-        </div>
-
-        <div class="board-wrapper">
-
-            <div class="board-columns" cdkDropListGroup>
-
-                <div class="board-column" *ngFor="let column of board.columns">
-
-                    <div class="column-title">
-                        {{column.name}}
-                    </div>
-                    <div class="task-container" cdkDropList [cdkDropListData]="column.tasks"
-                        (cdkDropListDropped)="drop($event)">
-                        <div class="task" *ngFor="let task of column.tasks" cdkDrag>
-                            {{task}}
-                        </div>
-                    </div>
-                </div>
-
+    <div class="board-wrapper">
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let column of board.columns">
+          <div class="column-title">
+            {{ column.name }}
+          </div>
+          <div
+            class="task-container"
+            cdkDropList
+            [cdkDropListData]="column.tasks"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <div class="task" *ngFor="let task of column.tasks" cdkDrag>
+              {{ task }}
+              <!-- <a class="tag is-delete"></a> -->
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Modal de agregar columna -->
+  <div class="modal" [class.is-active]="isModalColumnActive">
+    <div class="modal-background" (click)="closeColumnModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <!--aca podria agregar que cambie el fondo del header teniendo en cuenta el fondo usado, pero hay que revisar pq los fondos negros no funcionan bien -->
+        <p class="modal-card-title">Nueva Columna</p>
+        <button
+          class="delete"
+          aria-label="close"
+          (click)="closeColumnModal()"
+        ></button>
+      </header>
+      <section class="modal-card-body">
+        <!-- Content ... -->
+        <br />
+
+        <form [formGroup]="columnForm">
+          <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input
+                [(ngModel)]="newColumnName"
+                class="input is-large"
+                type="text"
+                formControlName="columnName"
+                placeholder="Nombre de nueva columna"
+                required
+              />
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-table-columns"></i>
+              </span>
+            </p>
+            <!--  -->
+
+            <div
+              class="icon-text help is-danger"
+              *ngIf="
+                existentColumnName &&
+                columnForm.controls['columnName'].touched
+              "
+            >
+              <span class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
+              <span>La columna ya existe, ingrese otro nombre</span>
+            </div>
+            <!--  -->
+            <div
+              class="icon-text help is-danger"
+              *ngIf="
+                columnForm.controls['columnName'].invalid &&
+                columnForm.controls['columnName'].touched
+              "
+            >
+              <span class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
+              <span>El nombre de la columna es obligatorio.</span>
+            </div>
+          </div>
+          <br /><br />
+
+          <div class="buttons is-centered">
+            <!-- agregar -->
+            <button
+              class="button is-success"
+              (click)="addColumn()"
+              [disabled]="columnForm.invalid"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Agregar</span>
+            </button>
+            <!-- agregar y continuar -->
+            <button
+              class="button is-info"
+              (click)="addColumnAndContinue()"
+              [disabled]="columnForm.invalid"
+            >
+              <span class="icon is-small"
+                ><i class="fa-solid fa-check-double"></i
+              ></span>
+              <span>Agregar y continuar</span>
+            </button>
+            <!-- cancelar -->
+            <button class="button is-danger" (click)="closeColumnModal()">
+              <span class="icon is-small">
+                <i class="fas fa-times"></i>
+              </span>
+              <span>Cancelar</span>
+            </button>
+          </div>
+        </form>
+      </section>
+      <footer class="modal-card-foot"></footer>
+    </div>
+  </div>
+
+  <!-- Modal de agregar tarea -->
+  <div class="modal" [class.is-active]="isModalTaskActive">
+    <div class="modal-background" (click)="closeTaskModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <!--aca podria agregar que cambie el fondo del header teniendo en cuenta el fondo usado, pero hay que revisar pq los fondos negros no funcionan bien -->
+        <p class="modal-card-title">Nueva Tarea</p>
+        <button
+          class="delete"
+          aria-label="close"
+          (click)="closeTaskModal()"
+        ></button>
+      </header>
+      <section class="modal-card-body">
+        <!-- Content ... -->
+        <br />
+
+        <form [formGroup]="taskForm">
+          <!-- Campo Nombre de Tarea -->
+          <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input
+                class="input is-large"
+                type="text"
+                formControlName="taskName"
+                placeholder="Nombre de nueva tarea"
+                [(ngModel)]="newTaskName"
+                required
+              />
+              <span class="icon is-small is-left">
+                <i class="fa-solid fa-list"></i>
+              </span>
+            </p>
+            <div
+              class="icon-text help is-danger"
+              *ngIf="
+                taskForm.controls['taskName'].invalid &&
+                taskForm.controls['taskName'].touched
+              "
+            >
+              <span class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
+              <span>El nombre de la tarea es obligatorio.</span>
+            </div>
+          </div>
+          <br />
+          <!-- Selector de Columna -->
+          <div class="field">
+            <div class="control has-icons-left">
+              <div class="select is-large">
+                <select
+                  formControlName="column"
+                  [(ngModel)]="selectedColumn"
+                  (change)="onColumnChange()"
+                >
+                  <option [ngValue]="undefined" [disabled]="true" selected>
+                    Seleccionar columna
+                  </option>
+                  <option
+                    *ngFor="let column of board.columns"
+                    [ngValue]="column"
+                  >
+                    {{ column.name | titlecase }}
+                  </option>
+                </select>
+              </div>
+              <div class="icon is-small is-left">
+                <i class="fa-solid fa-table-columns"></i>
+              </div>
+            </div>
+            <div
+              class="icon-text help is-danger"
+              *ngIf="
+                taskForm.controls['column'].invalid &&
+                taskForm.controls['column'].touched
+              "
+            >
+              <span class="icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </span>
+              <span>Debes seleccionar una columna.</span>
+            </div>
+          </div>
+          <br /><br />
+          <!-- Botones -->
+          <div class="buttons is-centered">
+            <button
+              class="button is-success"
+              (click)="addTask()"
+              [disabled]="taskForm.invalid"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Agregar</span>
+            </button>
+            <button
+              class="button is-info"
+              (click)="addTaskAndContinue()"
+              [disabled]="taskForm.invalid"
+            >
+              <span class="icon is-small">
+                <i class="fa-solid fa-check-double"></i>
+              </span>
+              <span>Agregar y continuar</span>
+            </button>
+            <button (click)="closeTaskModal()" class="button is-danger">
+              <span class="icon is-small">
+                <i class="fas fa-times"></i>
+              </span>
+              <span>Cancelar</span>
+            </button>
+          </div>
+        </form>
+      </section>
+      <footer class="modal-card-foot"></footer>
+    </div>
+  </div>
 </div>
