@@ -13,7 +13,50 @@ html, body {
     height: 100%;
 }
 html{
-    background-image: url('./assets/background.svg');
     background-size: cover;
     overflow-y: auto !important;
+
+    &.f1{
+        background-image: url('./assets/background.svg');
+    }
+
+    &.f2{
+        background-image: url('./assets/liquid-cheese.svg');
+        background-size: unset;
+    }
+
+    &.f3{
+        background-image: url('./assets/wavey-fingerprint.svg');
+        
+        background-size:unset;
+    }
+
+    &.f4{
+        background-image: url('./assets/flat-mountains.svg');
+    }
+
+    &.f5{
+        background-image: url('./assets/colorful-stingrays.svg');
+        background-size: unset;
+    }
+
+    &.f6{
+        background-image: url('./assets/abstract-timekeeper.svg');
+    }
+
+    &.f7{
+        background-image: url('./assets/hollowed-boxes.svg');
+        background-size: unset;
+    }
+    &.f8{
+        background-image: url('./assets/zig-zag.svg');
+        background-size: unset;
+    }
+    &.f9{
+        background-image: url('./assets/polka-dots.svg');
+        background-size: unset;
+    }
+
+
+
 }
